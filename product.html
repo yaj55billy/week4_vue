@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-language" content="zh-Hant-TW" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="" />
+  <meta property="og:title" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content="" />
+  <meta property="og:url" content="" />
+  <title>第四週 Vue 開發產品管理頁面</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3.3.2/dist/vue-loading.css">
+  <link rel="stylesheet" href="css/all.css">
+</head>
+
+<div id="app">
+  <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap shadow navbar-expand ">
+    <a href="#" class="navbar-brand col-sm-3 col-md-2 mr-0 active">後台</a>
+    <div class="ml-auto">
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a href="#" class="nav-link active">回首頁</a>
+        </li>
+        <li class="nav-item text-nowrap">
+          <a href="#" class="nav-link">登出</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid mt-3">
+
+    <div class="row">
+      <!-- 待調整 -->
+      <nav class="col-md-2 d-md-block bg-light sidebar">
+        <div class="sidebar-sticky mt-6">
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span class="h5">儀表板</span>
+          </h6>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a href="" class="nav-link font-weight-bold router-link-exact-active active">
+                產品列表
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="" class="nav-link font-weight-bold">
+                優惠券
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="" class="nav-link font-weight-bold">
+                訂單
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="col-md-10 ml-sm-auto col-lg-10 px-4">
+        <div class="text-right mt-sm-6 mt-4">
+          <button class="btn btn-primary" @click="openModal('new')">
+            建立新的產品
+          </button>
+        </div>
+        <table class="table mt-4 table-rwd">
+          <thead class="m-hide">
+            <tr>
+              <th width="120">分類</th>
+              <th>產品名稱</th>
+              <th width="120">原價</th>
+              <th width="120">售價</th>
+              <th width="100">是否啟用</th>
+              <th width="120">編輯</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item) in products" :key="item.id">
+              <td data-th="分類">{{ item.category }}</td>
+              <td data-th="產品名稱">{{ item.title }}</td>
+              <td data-th="原價">{{ item.origin_price }}</td>
+              <td data-th="售價">{{ item.price }}</td>
+              <td data-th="是否啟用">
+                <span v-if="item.enabled" class="text-success">啟用</span>
+                <span v-else>未啟用</span>
+              </td>
+              <td data-th="編輯">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-primary btn-sm"
+                    @click="openModal('edit', item)">編輯</button>
+                  <button type="button" class="btn btn-outline-danger btn-sm"
+                    @click="openModal('delete',item)">刪除</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- step3 把外層資料傳進 換頁元件 -->
+        <!-- step4 內層會丟頁碼出來到 getProducts -->
+        <pagination :pagedata="pagination" @update="getProducts"></pagination>
+
+        <div id="productModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <!-- step5 建立 Modal 元件，並接外層資料 -->
+          <modal :api="api" :temp-product="tempProduct" @update-data="getProducts"></modal>
+        </div>
+        <div id="delProductModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <delmodal :api="api" :temp-product="tempProduct" @update-data="getProducts"></delmodal>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- vue-loading -->
+  <loading :active.sync="isLoading"></loading>
+</div>
+
+<script src="js/jquery.3.1.1.min.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3.3.2/dist/vue-loading.min.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/all.js" type="module"></script>
+
+</body>
+
+</html>
