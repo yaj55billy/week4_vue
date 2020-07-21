@@ -103,7 +103,7 @@
             document.cookie = `token=${token}; expires=${new Date(expired * 1000)}; path=/`;
 
             // // 轉址一定要在 ajax 之後
-            window.location = '/product.html';
+            window.location = './product.html';
 
           }).catch((error) => {
             console.log(error);
